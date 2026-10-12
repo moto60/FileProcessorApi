@@ -1,4 +1,5 @@
 ﻿using FileProcessorApi.Enumerations;
+using FileProcessorApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FileProcessorApi.Controllers
@@ -7,9 +8,16 @@ namespace FileProcessorApi.Controllers
     [Route("[controller]")]
     public sealed class FileController : ControllerBase
     {
-        [HttpPost("process")]
-        public async Task<IActionResult> ProcessFileAsync(IFormFile file) {
+        private readonly IProcessFileFactory _processFileFactory;
 
+        public FileController(IProcessFileFactory processFileFactory)
+        {
+            _processFileFactory = processFileFactory;
+        }
+
+        [HttpPost("process")]
+        public IActionResult ProcessFile(IFormFile file)
+        {
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded.");
 
@@ -18,10 +26,13 @@ namespace FileProcessorApi.Controllers
             if (!Enum.TryParse<FileExtension>(
                     extension,
                     ignoreCase: true,
-                    out _))
+                    out var fileExtension)
+                || !Enum.IsDefined(fileExtension))
             {
                 return BadRequest("Invalid file extension.");
             }
+
+            _processFileFactory.Create(fileExtension);
 
             return Ok();
         }
