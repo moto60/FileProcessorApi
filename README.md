@@ -14,6 +14,8 @@ CSV files return the average of their `amount` column. Include a header row with
 
 JSON files must contain an array of objects; the response contains only records whose `active` field is `true`.
 
+Successful responses include the processing result and the total number of files processed since the service started. The service logs the uploaded filename, processing time, and updated total. Failed uploads are not included in the counter.
+
 Example `sample.csv`:
 
 ```csv
@@ -39,7 +41,7 @@ Set `FILE_PROCESSOR_API_KEY` in the environment before starting the service:
 $env:FILE_PROCESSOR_API_KEY = "replace-with-a-long-random-value"
 ```
 
-Do not commit real API keys to source control. The upload endpoint rejects requests without a matching key. If the setting is missing, the endpoint returns an internal server error and logs the configuration problem.
+`appsettings.json` includes a sample key for local development. Replace it with a secure value or override it with the environment variable before deployment. Do not use the sample key or commit real API keys to source control. The upload endpoint rejects requests without a matching key.
 
 ## Run locally
 

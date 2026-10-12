@@ -11,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<CsvProcessFileService>();
 builder.Services.AddScoped<JsonProcessFileService>();
 builder.Services.AddScoped<IProcessFileFactory, FileProcessFactory>();
+builder.Services.AddSingleton<FileProcessingCounter>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
