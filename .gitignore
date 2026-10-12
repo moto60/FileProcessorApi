@@ -8,3 +8,5 @@
 /.vs/slnx.sqlite-journal
 /obj
 /appsettings.Development.json
+/Tests/obj
+/Tests/bin/Debug/net8.0

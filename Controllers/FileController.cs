@@ -1,6 +1,8 @@
 ﻿using FileProcessorApi.Enumerations;
+using FileProcessorApi.Dtos;
 using FileProcessorApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace FileProcessorApi.Controllers
 {
@@ -16,7 +18,9 @@ namespace FileProcessorApi.Controllers
         }
 
         [HttpPost("process")]
-        public IActionResult ProcessFile(IFormFile file)
+        public async Task<IActionResult> ProcessFile(
+            IFormFile file,
+            CancellationToken cancellationToken)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded.");
@@ -32,9 +36,27 @@ namespace FileProcessorApi.Controllers
                 return BadRequest("Invalid file extension.");
             }
 
-            _processFileFactory.Create(fileExtension);
+            var processor = _processFileFactory.Create(fileExtension);
 
-            return Ok();
+            try
+            {
+                await using var stream = file.OpenReadStream();
+                var result = await processor.ProcessAsync(stream, cancellationToken);
+
+                return Ok(new FileProcessResult
+                {
+                    Extension = fileExtension,
+                    Result = result
+                });
+            }
+            catch (InvalidDataException exception)
+            {
+                return BadRequest(exception.Message);
+            }
+            catch (JsonException exception)
+            {
+                return BadRequest($"Invalid JSON: {exception.Message}");
+            }
         }
     }
 }
