@@ -1,5 +1,6 @@
 using FileProcessorApi.Factories;
 using FileProcessorApi.Interfaces;
+using FileProcessorApi.Middleware;
 using FileProcessorApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
+app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

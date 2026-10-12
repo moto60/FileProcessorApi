@@ -1,6 +1,7 @@
 ﻿using FileProcessorApi.Enumerations;
 using FileProcessorApi.Dtos;
 using FileProcessorApi.Interfaces;
+using FileProcessorApi.Middleware;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -18,6 +19,7 @@ namespace FileProcessorApi.Controllers
         }
 
         [HttpPost("process")]
+        [ApiKeyRequired]
         public async Task<IActionResult> ProcessFile(
             IFormFile file,
             CancellationToken cancellationToken)
