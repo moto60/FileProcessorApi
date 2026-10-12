@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/bin
+/.vs/FileProcessorApi
+*.sqlite
+/.vs/slnx.sqlite-journal
+/obj
+/appsettings.Development.json
